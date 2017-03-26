@@ -108,13 +108,13 @@ snippet $e
 # A compile function
 snippet ngdcf
 	function compile(tElement, tAttrs, transclude) {
-		return function (scope, element, attrs) {
+		return function postLink(scope, iElement, iAttrs, controller) {
 			${0}
 		}
 	}
 # A linking function in a directive
 snippet ngdlf
-	function (scope, element, attrs${1:ctrl}) {
+	function postLink(scope, iElement, iAttrs${1:, ctrl}) {
 		${0}
 	}
 # A directive with a compile function
@@ -123,7 +123,7 @@ snippet ngdc
 		var directiveDefinitionObject = {
 			${3:directiveAttrs},
 			compile: function compile(tElement, tAttrs, transclude) {
-				return function (scope, element, attrs) {
+				return function postLink(scope, iElement, iAttrs, controller) {
 					${0}
 				}
 			}
@@ -132,10 +132,16 @@ snippet ngdc
 	});
 # A directive with a linking function only
 snippet ngdl
-	.directive('${1:directiveName}', function (${2:directiveDeps}) {
-		return function (scope, element, attrs${3:ctrl}) {
-			${0}
-		}
+	.directive('${1:directiveName}', function factory(${2:directiveDeps}) {
+		var directiveDefinitionObject = {
+			restrict: '${3:EA}',
+			required: '${4:siblingDirectiveName}',
+			scope: ${5:false},
+			link: function postLink(scope, iElement, iAttrs${6:, controller, transcludeFn}) {
+				${0}
+			}
+		};
+		return directiveDefinitionObject;
 	});
 
 ## Doc related snippets
